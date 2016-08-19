@@ -79,6 +79,8 @@ xml_get_value(struct lyd_node *node, struct lyxml_elem *xml, int options)
 {
     struct lyd_node_leaf_list *leaf = (struct lyd_node_leaf_list *)node;
     int resolve;
+    struct lys_type *type;
+    LY_DATA_TYPE target_value_type;
 
     assert(node && (node->schema->nodetype & (LYS_LEAFLIST | LYS_LEAF)) && xml);
 
@@ -87,14 +89,25 @@ xml_get_value(struct lyd_node *node, struct lyxml_elem *xml, int options)
 
     /* will be changed in case of union */
     leaf->value_type = ((struct lys_node_leaf *)node->schema)->type.base;
+    
+    target_value_type = leaf->value_type;
 
     if (options & (LYD_OPT_EDIT | LYD_OPT_GET | LYD_OPT_GETCONFIG)) {
         resolve = 0;
     } else {
         resolve = 1;
     }
+    
+    
+    if (target_value_type == LY_TYPE_LEAFREF) {
+        type = &((struct lys_node_leaf *)node->schema)->type.info.lref.target->type;
+        while (type->base == LY_TYPE_LEAFREF) {
+            type = &type->info.lref.target->type;
+        }
+        target_value_type = type->base;
+    }
 
-    if ((leaf->value_type == LY_TYPE_IDENT) || (leaf->value_type == LY_TYPE_INST)) {
+    if ((target_value_type == LY_TYPE_IDENT) || (target_value_type == LY_TYPE_INST) ) {
         /* convert the path from the XML form using XML namespaces into the JSON format
          * using module names as namespaces
          */

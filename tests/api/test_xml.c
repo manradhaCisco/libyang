@@ -51,6 +51,8 @@ const char *a_data_xml_attr = "\
 
 const char *res_xml = "<x xmlns=\"urn:a\"><bubba>test</bubba></x>";
 
+#define FILE_NAME_SIZE 19
+
 int
 generic_init(char *yang_file, char *yang_folder)
 {
@@ -187,12 +189,12 @@ test_lyxml_print_fd(void **state)
     (void) state; /* unused */
     char *result = NULL;
     struct stat sb;
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     int rc;
     int fd;
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
     fd = mkstemp(file_name);
     if (fd < 1) {
@@ -234,7 +236,7 @@ test_lyxml_print_file(void **state)
     struct lyxml_elem *xml = NULL;
     const char *path = TESTS_DIR"/api/files/a.xml";
     struct stat sb;
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     FILE *f = NULL;
     int rc;
@@ -248,7 +250,8 @@ test_lyxml_print_file(void **state)
     assert_string_equal("x", xml->name);
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
     fd = mkstemp(file_name);
     if (fd < 1) {

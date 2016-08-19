@@ -107,11 +107,11 @@ json_print_leaf(struct lyout *out, int level, const struct lyd_node *node, int o
     switch (leaf->value_type & LY_DATA_TYPE_MASK) {
     case LY_TYPE_BINARY:
     case LY_TYPE_STRING:
-    case LY_TYPE_LEAFREF:
     case LY_TYPE_BITS:
     case LY_TYPE_ENUM:
     case LY_TYPE_IDENT:
     case LY_TYPE_INST:
+    case LY_TYPE_UNION:
         json_print_string(out, leaf->value_str);
         break;
 
@@ -126,6 +126,15 @@ json_print_leaf(struct lyout *out, int level, const struct lyd_node *node, int o
     case LY_TYPE_UINT32:
     case LY_TYPE_UINT64:
         ly_print(out, "%s", leaf->value_str[0] ? leaf->value_str : "null");
+        break;
+    case LY_TYPE_LEAFREF:
+        if (leaf->value.leafref) {
+            json_print_leaf(out, level, leaf->value.leafref, 1, 0);
+        } else if(leaf->value_str) {
+            json_print_string(out, leaf->value_str);
+        } else {
+            ly_print(out, "\"\"");
+        }
         break;
 
     case LY_TYPE_EMPTY:

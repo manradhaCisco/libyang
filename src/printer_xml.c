@@ -195,7 +195,6 @@ xml_print_leaf(struct lyout *out, int level, const struct lyd_node *node, int to
     switch (leaf->value_type & LY_DATA_TYPE_MASK) {
     case LY_TYPE_BINARY:
     case LY_TYPE_STRING:
-    case LY_TYPE_LEAFREF:
     case LY_TYPE_BITS:
     case LY_TYPE_ENUM:
     case LY_TYPE_BOOL:
@@ -208,6 +207,7 @@ xml_print_leaf(struct lyout *out, int level, const struct lyd_node *node, int to
     case LY_TYPE_UINT16:
     case LY_TYPE_UINT32:
     case LY_TYPE_UINT64:
+    case LY_TYPE_UNION:
         if (!leaf->value_str || !leaf->value_str[0]) {
             ly_print(out, "/>");
         } else {
@@ -243,10 +243,50 @@ xml_print_leaf(struct lyout *out, int level, const struct lyd_node *node, int to
         lydict_remove(node->schema->module->ctx, xml_expr);
         break;
 
+    case LY_TYPE_LEAFREF:
+            if (leaf->value.leafref) {
+                lyxml_dump_text(out, ((struct lyd_node_leaf_list *)(leaf->value.leafref))->value_str);
+            } else if (leaf->value_str) {
+                if(strchr(leaf->value_str ,':')) {
+                    xml_expr = transform_json2xml(node->schema->module, ((struct lyd_node_leaf_list *)node)->value_str,
+                                                  &prefs, &nss, &ns_count);
+                    if (!xml_expr) {
+                        /* error */
+                        ly_print(out, "\"(!error!)\"");
+                        return;
+                    }
+                    
+                    for (i = 0; i < ns_count; ++i) {
+                        ly_print(out, " xmlns:%s=\"%s\"", prefs[i], nss[i]);
+                    }
+                    free(prefs);
+                    free(nss);
+                    
+                    if (xml_expr[0]) {
+                        ly_print(out, ">");
+                        lyxml_dump_text(out, xml_expr);
+                        ly_print(out, "</%s>", node->schema->name);
+                    } else {
+                        ly_print(out, "/>");
+                    }
+                    lydict_remove(node->schema->module->ctx, xml_expr);
+                    break;
+                } else {
+                    ly_print(out, ">");
+                    lyxml_dump_text(out, leaf->value_str);
+                    ly_print(out, "</%s>", node->schema->name);
+                }
+            }else {
+                ly_print(out, "</%s>", node->schema->name);
+            }
+            
+            break;
+
+
     case LY_TYPE_EMPTY:
         ly_print(out, "/>");
         break;
-
+    
     default:
         /* error */
         ly_print(out, "\"(!error!)\"");

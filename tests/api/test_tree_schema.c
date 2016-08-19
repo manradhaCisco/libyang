@@ -291,6 +291,8 @@ Status:    current\n\
 Enabled:   no\n\
 If-feats:  \n";
 
+#define FILE_NAME_SIZE 19
+
 static int
 setup_f(void **state)
 {
@@ -794,7 +796,7 @@ test_lys_print_fd_tree(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "top";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     int rc;
     int fd = -1;
@@ -805,7 +807,7 @@ test_lys_print_fd_tree(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
@@ -846,7 +848,7 @@ test_lys_print_fd_yang(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "top";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     int rc;
     int fd = -1;
@@ -857,7 +859,7 @@ test_lys_print_fd_yang(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
@@ -898,7 +900,7 @@ test_lys_print_fd_yin(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "top";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     int rc;
     int fd = -1;
@@ -909,7 +911,7 @@ test_lys_print_fd_yin(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
@@ -950,7 +952,7 @@ test_lys_print_fd_info(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "feature/foo";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     int rc;
     int fd = -1;
@@ -961,7 +963,7 @@ test_lys_print_fd_info(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
@@ -1002,7 +1004,7 @@ test_lys_print_file_tree(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "top";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     FILE *f = NULL;
     int rc;
@@ -1014,7 +1016,7 @@ test_lys_print_file_tree(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
@@ -1066,7 +1068,7 @@ test_lys_print_file_yin(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "top";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     FILE *f = NULL;
     int rc;
@@ -1078,7 +1080,7 @@ test_lys_print_file_yin(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
@@ -1130,7 +1132,7 @@ test_lys_print_file_yang(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "top";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     FILE *f = NULL;
     int rc;
@@ -1142,7 +1144,7 @@ test_lys_print_file_yang(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
@@ -1194,7 +1196,7 @@ test_lys_print_file_info(void **state)
     LYS_INFORMAT yang_format = LYS_IN_YIN;
     struct stat sb;
     char *target = "feature/foo";
-    char file_name[19];
+    char file_name[FILE_NAME_SIZE];
     char *result;
     FILE *f = NULL;
     int rc;
@@ -1206,7 +1208,7 @@ test_lys_print_file_info(void **state)
     }
 
     memset(file_name, 0, sizeof(file_name));
-    strncpy(file_name, "/tmp/libyang-XXXXXX", 21);
+    strncpy(file_name, "/tmp/libyang-XXXXXX", FILE_NAME_SIZE);
 
 
     fd = mkstemp(file_name);
