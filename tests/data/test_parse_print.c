@@ -212,9 +212,7 @@ test_parse_print_xml(void **state)
     const char *rpcreply = TESTS_DIR"/data/files/all-rpcreply.xml";
     const char *notif = TESTS_DIR"/data/files/all-notif.xml";
     
-    const char * str1 = "<cont1 xmlns=\"urn:all\">\n  <leaf2>3000</leaf2>\n  <leaf1>-25</leaf1>\n  <leaf3>-100000</leaf3>\n  <leaf4>5000</leaf4>\n  <leaf5>200</leaf5>\n  <leaf6>60000</leaf6>\n  <leaf7>4000000000</leaf7>\n  <leaf8>5000000000</leaf8>\n  <leaf9>25.012345678</leaf9>\n  <leaf11>two</leaf11>\n  <leaf12>flag0 flag2</leaf12>\n  <leaf13>somebase64string</leaf13>\n  <leaf14>ident1</leaf14>\n  <leaf15/>\n  <leaf16>/cont1/leaf2</leaf16>\n  <leaf17>ident1</leaf17>\n  <list1>\n    <leaf18>key1</leaf18>\n    <leaf19>1</leaf19>\n    <axml1>\n<some xmlns=\"urn:all\">\n  <possibly>\n    <long>xml</long>\n  </possibly>\n</some>\n    </axml1>\n  </list1>\n  <list1>\n    <leaf18>key2</leaf18>\n    <leaf19>2</leaf19>\n  </list1>\n  <llist1>aaa</llist1>\n  <llist1>aaaa</llist1>\n  <llist1>aaaaaaaaa</llist1>\n</cont1>\n" "<cont1 xmlns=\"urn:all\">\n  <leaf2>3000</leaf2>\n  <leaf1>-25</leaf1>\n  <leaf3>-100000</leaf3>\n  <leaf4>5000</leaf4>\n  <leaf5>200</leaf5>\n  <leaf6>60000</leaf6>\n  <leaf7>4000000000</leaf7>\n  <leaf8>5000000000</leaf8>\n  <leaf9>25.012345678</leaf9>\n  <leaf11>two</leaf11>\n  <leaf12>flag0 flag2</leaf12>\n  <leaf13>somebase64string</leaf13>\n  <leaf14>ident1</leaf14>\n  <leaf15/>\n  <leaf16>/cont1/leaf2</leaf16>\n  <leaf17>ident1</leaf17>\n  <list1>\n    <leaf18>key1</leaf18>\n    <leaf19>1</leaf19>\n    <axml1>\n<some xmlns=\"urn:all\">\n  <possibly>\n    <long>xml</long>\n  </possibly>\n</some>\n    </axml1>\n  </list1>\n  <list1>\n    <leaf18>key2</leaf18>\n    <leaf19>2</leaf19>\n  </list1>\n  <llist1>aaa</llist1>\n  <llist1>aaaa</llist1>\n  <llist1>aaaaaaaaa</llist1>\n</cont1>\n";
     
-    const char *str2 = "<cont1 xmlns=\"urn:all\">\n  <leaf2>3000</leaf2>\n  <leaf1>-25</leaf1>\n  <leaf3>-100000</leaf3>\n  <leaf4>5000</leaf4>\n  <leaf5>200</leaf5>\n  <leaf6>60000</leaf6>\n  <leaf7>4000000000</leaf7>\n  <leaf8>5000000000</leaf8>\n  <leaf9>25.012345678</leaf9>\n  <leaf11>two</leaf11>\n  <leaf12>flag0 flag2</leaf12>\n  <leaf13>somebase64string</leaf13>\n  <leaf14ident1\n  <leaf15/>\n  <leaf16>/cont1/leaf2</leaf16>\n  <leaf17>ident1</leaf17>\n  <list1>\n    <leaf18>key1</leaf18>\n    <leaf19>1</leaf19>\n    <axml1>\n<some xmlns=\"urn:all\">\n  <possibly>\n    <long>xml</long>\n  </possibly>\n</some>\n    </axml1>\n  </list1>\n  <list1>\n    <leaf18>key2</leaf18>\n    <leaf19>2</leaf19>\n  </list1>\n  <llist1>aaa</llist1>\n  <llist1>aaaa</llist1>\n  <llist1>aaaaaaaaa</llist1>\n</cont1>\n"
     /* data */
     fd = open(data, O_RDONLY);
     fstat(fd, &s);
@@ -227,12 +225,10 @@ test_parse_print_xml(void **state)
     assert_ptr_not_equal(st->dt, NULL);
     lyd_print_mem(&(st->str2), st->dt, LYD_XML, LYP_FORMAT);
 
-    int s1_len = strlen(st->str1);
-    int s2_len = strlen(st->str2);
+    //int s1_len = strlen(st->str1);
+    //int s2_len = strlen(st->str2);
     
-    assert_int_equal(s1_len, s2_len);
-    //assert_string_equal(st->str2, test);
-    //assert_string_equal(st->str1, test);
+    //assert_int_equal(s1_len, s2_len);
     
     assert_string_equal(st->str1, st->str2);
 

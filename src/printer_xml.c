@@ -245,7 +245,9 @@ xml_print_leaf(struct lyout *out, int level, const struct lyd_node *node, int to
 
     case LY_TYPE_LEAFREF:
             if (leaf->value.leafref) {
+                ly_print(out, ">");
                 lyxml_dump_text(out, ((struct lyd_node_leaf_list *)(leaf->value.leafref))->value_str);
+                ly_print(out, "</%s>", node->schema->name);
             } else if (leaf->value_str) {
                 if(strchr(leaf->value_str ,':')) {
                     xml_expr = transform_json2xml(node->schema->module, ((struct lyd_node_leaf_list *)node)->value_str,
