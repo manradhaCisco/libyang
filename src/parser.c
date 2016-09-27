@@ -725,8 +725,15 @@ upper:
             goto error;
         }
         c = tail;
+        
+        if (!strncmp(c, "..", 2)){
+            goto upper;
+
+        }
+        
         if (*c == '.') {
             errno = 0;
+
             if (type->base == LY_TYPE_UINT64) {
                 strtoull(c, &tail, 10);
             } else {
@@ -1072,8 +1079,13 @@ switchtype:
             LOGVAL(LYE_INVAL, LY_VLOG_LYD, node, "", node->schema->name);
             return EXIT_FAILURE;
         }
-
-        node->value.ident = resolve_identref(stype->info.ident.ref, node->value_str, (struct lyd_node *)node);
+        
+        if(stype->info.ident.ref) {
+            node->value.ident = resolve_identref(stype->info.ident.ref, node->value_str, (struct lyd_node *)node);
+        } else {
+            node->value.ident = resolve_identref(stype->der->type.info.ident.ref, node->value_str, (struct lyd_node *)node);
+        }
+            
         if (!node->value.ident) {
             return EXIT_FAILURE;
         }
@@ -1105,6 +1117,7 @@ switchtype:
 
             /* get the value according to the target's type */
             stype = type;
+        
             goto switchtype;
         }
         break;
@@ -1198,11 +1211,25 @@ int
 lyp_parse_value(struct lyd_node_leaf_list *leaf, struct lyxml_elem *xml, int resolve)
 {
     int found = 0;
-    struct lys_type *type, *stype;
+    struct lys_type *type, *stype, *leafref_target_type;
 
     assert(leaf);
 
     stype = &((struct lys_node_leaf *)leaf->schema)->type;
+    if(stype->base == LY_TYPE_LEAFREF) {
+        if (!resolve) {
+            leafref_target_type = &((struct lys_node_leaf *)leaf->schema)->type.info.lref.target->type;
+            while (leafref_target_type->base == LY_TYPE_LEAFREF) {
+                leafref_target_type = &leafref_target_type->info.lref.target->type;
+            }
+            if(leafref_target_type->base == LY_TYPE_UNION ){
+                stype = leafref_target_type;
+            }
+          
+        }
+
+    }
+    
     if (stype->base == LY_TYPE_UNION) {
         /* turn logging off, we are going to try to validate the value with all the types in order */
         ly_vlog_hide(1);
