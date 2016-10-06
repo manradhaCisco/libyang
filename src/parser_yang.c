@@ -80,7 +80,7 @@ yang_check_typedef_identif(struct lys_node *root, struct lys_node *node, char *i
                     LOGVAL(LYE_DUPID, LY_VLOG_NONE, NULL, "typedef", id);
                     return EXIT_FAILURE;
                 }
-            } 
+            }
         LY_TREE_DFS_END(node, next, child)}
     } while (root && (node = node->next));
     return EXIT_SUCCESS;
@@ -2101,7 +2101,7 @@ yang_use_extension(struct lys_module *module, struct lys_node *data_node, void *
             break;
         }
     }
-    if (!ns && !strcmp(module->prefix, prefix)) {
+    if (!ns && module->prefix && !strcmp(module->prefix, prefix)) {
         ns = (module->type) ? ((struct lys_submodule *)module)->belongsto->ns : module->ns;
     }
     if (ns && !strcmp(ns, LY_NSNACM)) {
