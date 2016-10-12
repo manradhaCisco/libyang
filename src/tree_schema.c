@@ -2876,7 +2876,7 @@ lys_features_list(const struct lys_module *module, uint8_t **states)
 API struct lys_module *
 lys_node_module(const struct lys_node *node)
 {
-    return node->module->type ? ((struct lys_submodule *)node->module)->belongsto : node->module;
+    return node? (node->module->type ? ((struct lys_submodule *)node->module)->belongsto : node->module): NULL;
 }
 
 API struct lys_module *
@@ -3142,6 +3142,8 @@ lys_sub_module_remove_devs_augs(struct lys_module *module)
         lys_switch_deviation(&module->deviation[i], module);
 
         /* remove our deviation import, clear deviated flag is possible */
+        if(module->deviation[i].orig_node == NULL)
+        	continue;
         orig_mod = lys_node_module(module->deviation[i].orig_node);
         flag = 0;
         for (j = 0; j < orig_mod->imp_size; ++j) {
