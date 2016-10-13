@@ -5,6 +5,7 @@ module f {
   typedef tdef2 {
     type leafref {
       path "/refleaf";
+      require-instance true;
     }
   }
 

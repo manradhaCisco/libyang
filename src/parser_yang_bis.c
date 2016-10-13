@@ -2813,8 +2813,18 @@ yybackup:
   /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
   if (yychar == YYEMPTY)
     {
-      YYDPRINTF ((stderr, "Reading a token: "));
       yychar = yylex (&yylval, &yylloc, scanner);
+
+      #define TEMPORARY_WORKAROUND
+      if(yychar == REQUIRE_INSTANCE_KEYWORD)
+      {
+    	  //printf("skipping from: %s %d\n", yyget_text(scanner),yychar);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+      }
+      /*TEMPORARY_WORKAROUND*/
     }
 
   if (yychar <= YYEOF)
