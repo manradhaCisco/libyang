@@ -2916,6 +2916,17 @@ yybackup:
     {
       YYDPRINTF ((stderr, "Reading a token: "));
       yychar = yylex (&yylval, &yylloc, scanner);
+      #ifndef TEMPORARY_WORKAROUND
+      #define TEMPORARY_WORKAROUND
+      if(yychar == REQUIRE_INSTANCE_KEYWORD)
+      {
+    	  //printf("skipping from: %s %d\n", yyget_text(scanner),yychar);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+    	  yychar = yylex (&yylval, &yylloc, scanner);
+      }
+      #endif /*TEMPORARY_WORKAROUND*/
     }
 
   if (yychar <= YYEOF)
