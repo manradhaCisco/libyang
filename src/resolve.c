@@ -2217,9 +2217,9 @@ resolve_partial_json_data_list_predicate(const char *predicate, const char *node
 
         /* make value canonical */
         type = lyd_leaf_type(key, 1);
-        if ((type->base == LY_TYPE_IDENT)
-                && !strncmp(key->value_str, lyd_node_module(node)->name, strlen(lyd_node_module(node)->name))) {
-            assert(key->value_str[strlen(lyd_node_module(node)->name)] == ':');
+        if ((key->value_type & LY_TYPE_IDENT)
+                && !strncmp(key->value_str, lyd_node_module(node)->name, strlen(lyd_node_module(node)->name))
+                && (key->value_str[strlen(lyd_node_module(node)->name)] == ':')) {
             key_val = key->value_str + strlen(lyd_node_module(node)->name) + 1;
         } else {
             key_val = key->value_str;
@@ -3529,14 +3529,18 @@ resolve_path_predicate_data(const char *pred, struct lyd_node *node, struct unre
 
             /* check match between source and destination nodes */
             leaf_dst = (struct lyd_node_leaf_list *)dest_match.node[0];
-            while (leaf_dst->value_type == LY_TYPE_LEAFREF) {
-                leaf_dst = (struct lyd_node_leaf_list *)leaf_dst->value.leafref;
+            while (leaf_dst && leaf_dst->value_type == LY_TYPE_LEAFREF) {
+                            leaf_dst = (struct lyd_node_leaf_list *)leaf_dst->value.leafref;
             }
             leaf_src = (struct lyd_node_leaf_list *)source_match.node[0];
-            while (leaf_src->value_type == LY_TYPE_LEAFREF) {
+            while (leaf_src && leaf_src->value_type == LY_TYPE_LEAFREF) {
                 leaf_src = (struct lyd_node_leaf_list *)leaf_src->value.leafref;
             }
-            if (leaf_src->value_type != leaf_dst->value_type) {
+            if (!leaf_src || !leaf_dst) {
+                /* not yet resolved leafrefs */
+                return EXIT_FAILURE;
+            }
+            if ((leaf_src->value_type & LY_DATA_TYPE_MASK) != (leaf_dst->value_type & LY_DATA_TYPE_MASK)) { 
                 goto remove_leafref;
             }
 
@@ -6994,7 +6998,7 @@ resolve_unres_data(struct unres_data *unres, struct lyd_node **root, int options
         ly_err_clean(1);
         progress = 0;
         for (i = 0; i < unres->count; i++) {
-            if (unres->type[i] != UNRES_WHEN) {
+           if (unres->type[i] != UNRES_WHEN && unres->type[i] != UNRES_LEAFREF) { 
                 continue;
             }
             assert(!(options & LYD_OPT_TRUSTED));

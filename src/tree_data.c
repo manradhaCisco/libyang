@@ -3731,7 +3731,7 @@ nextsiblings:
         if (to_free) {
             if ((*node) == to_free) {
                 /* we shouldn't be here */
-                assert(0);
+                *node = NULL;
             }
             lyd_free(to_free);
             to_free = NULL;
@@ -3875,7 +3875,7 @@ lyd_unlink_internal(struct lyd_node *node, int permanent)
         /* fix leafrefs */
         LY_TREE_DFS_BEGIN(node, next, iter) {
             /* the node is target of a leafref */
-            if ((iter->schema->nodetype & (LYS_LEAF | LYS_LEAFLIST)) && iter->schema->child) {
+            if ((iter->schema && iter->schema->nodetype & (LYS_LEAF | LYS_LEAFLIST)) && iter->schema->child) {
                 set = (struct ly_set *)iter->schema->child;
                 for (i = 0; i < set->number; i++) {
                     data = lyd_find_instance(iter, set->set.s[i]);

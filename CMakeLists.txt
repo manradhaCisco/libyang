@@ -106,6 +106,7 @@ set(headers
 	src/dict.h)
 
 # create static libyang library
+set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 if(STATIC)
     add_library(yang_static STATIC ${libsrc})
     set_target_properties(yang_static PROPERTIES OUTPUT_NAME yang)
@@ -115,7 +116,6 @@ if(STATIC)
     install(TARGETS yang_static DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif(STATIC)
 
-set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 add_library(yangobj OBJECT ${libsrc})
 add_library(yang SHARED $<TARGET_OBJECTS:yangobj>)
 set_target_properties(yang PROPERTIES VERSION ${LIBYANG_VERSION} SOVERSION ${LIBYANG_SOVERSION})
