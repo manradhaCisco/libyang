@@ -3731,7 +3731,7 @@ nextsiblings:
         if (to_free) {
             if ((*node) == to_free) {
                 /* we shouldn't be here */
-                assert(0);
+                *node = NULL;
             }
             lyd_free(to_free);
             to_free = NULL;
