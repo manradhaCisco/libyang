@@ -7734,8 +7734,8 @@ lyxp_node_atomize(const struct lys_node *node, struct lyxp_set *set)
         break;
     }
 
-    /* check "when" */
-    if (when) {
+    /* check "when" */   // TEMPORARY HACK. DISABLE WHEN
+/*    if (when) {
         resolve_when_ctx_snode(node, &ctx_snode, &ctx_snode_type);
         if (lyxp_atomize(when->cond, ctx_snode, ctx_snode_type, &tmp_set, LYXP_SNODE_WHEN | opts)) {
             free(tmp_set.val.snodes);
@@ -7749,10 +7749,10 @@ lyxp_node_atomize(const struct lys_node *node, struct lyxp_set *set)
 
         set_snode_merge(set, &tmp_set);
         memset(&tmp_set, 0, sizeof tmp_set);
-    }
+    }*/
 
-    /* check "must" */
-    for (i = 0; i < must_size; ++i) {
+    /* check "must" */  // TEMPORARY HACK. DISABLE MUST
+/*    for (i = 0; i < must_size; ++i) {
         if (lyxp_atomize(must[i].expr, node, LYXP_NODE_ELEM, &tmp_set, LYXP_SNODE_MUST | opts)) {
             free(tmp_set.val.snodes);
             free(set->val.snodes);
@@ -7766,7 +7766,7 @@ lyxp_node_atomize(const struct lys_node *node, struct lyxp_set *set)
 
         set_snode_merge(set, &tmp_set);
         memset(&tmp_set, 0, sizeof tmp_set);
-    }
+    }*/
 
     return EXIT_SUCCESS;
 }
